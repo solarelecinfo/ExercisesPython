@@ -22,9 +22,10 @@ def main():
 
     # === Boucle pour generer des données alèatoires de temperature===
     while True:
-        temp = round(random.randint(20, 30))
-        client.publish(topic, str(temp))
-        print(f"Température publiée sur {topic}:{temp}°C")
+        temp = round(random.randint(22, 30))
+        temp =str(temp)+"°C"
+        client.publish(topic, temp)
+        print(f"Température publiée sur {topic}:{temp}")
         time.sleep(4)
 
 if __name__ == "__main__":

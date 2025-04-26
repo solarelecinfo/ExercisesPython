@@ -9,11 +9,10 @@ topic = f"telemetry/temp"# topic
 # client internal data
 client_data="subscriber:raoult-pasteur"
 
-
 def on_message(client, userdata, msg):
     client_id=client._client_id.decode()
     payload=msg.payload.decode()
-    print(f"on_message with userdata:{str(userdata)} and id:{client_id}+ payload:{payload}")
+    print(f"on_message with userdata:{str(userdata)} and id:{client_id} payload:{payload}")
 
 def main():
     client = mqtt.Client(userdata=client_data)
