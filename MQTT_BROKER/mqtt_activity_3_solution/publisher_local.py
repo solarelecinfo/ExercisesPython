@@ -1,0 +1,88 @@
+# simulator device 1 for mqtt message publishing
+import threading
+
+import paho.mqtt.client as mqtt
+import time
+import random
+import tkinter as tk
+
+# Main layout definition
+main_layout = tk.Tk()
+main_layout.title("MQTT Temperature Publisher")
+
+# Paramètres de connection au Broker(serveur MQTT)
+broker = tk.StringVar() #tkinder input variable "localhost"
+port = tk.IntVar() #tkinder input variable port mqtt
+keepalive = 60 # time to live(seconds)
+topic = f"telemetry/temp"# topic
+client_data = tk.StringVar() #"publisher:binome-raoult-pasteur"
+
+def submit_server_values():
+    print("Broker:", broker.get())  # Récupère la valeur de broker
+    print("Port:", port.get())      # Récupère la valeur de port
+    print("keepalive:", keepalive)
+    print("topic:", topic)
+    print("client_data:", client_data.get())
+
+    #lance un serveur
+    threading.Thread(target=publish_start_button, daemon=True).start()
+
+
+
+def on_publish(client, userdata, mid):
+    print(f"on_publish with userdata:{str(userdata)} and message id:{mid}")
+
+
+
+def config_ui_interface():
+
+    #Définition de champs
+    broker_host = tk.Label(main_layout, text="Broker:")
+    broker_host_entry = tk.Entry(main_layout,textvariable=broker)
+
+    broker_port = tk.Label(main_layout, text="Port:")
+    broker_port_entry = tk.Entry(main_layout,textvariable=port)
+
+    broker_client_data = tk.Label(main_layout, text="Client_data:")
+    broker_client_data_entry = tk.Entry(main_layout,textvariable=client_data)
+
+    #Placement de champs dans le main_layout en mode FIFO
+    broker_host.pack()
+    broker_host_entry.pack()
+
+    broker_port.pack()
+    broker_port_entry.pack()
+
+    broker_client_data.pack()
+    broker_client_data_entry.pack()
+
+    # Bouton pour récupérer les valeurs et afficher dans la console
+    submit_button = tk.Button(main_layout, text="Valider", command=submit_server_values)
+    submit_button.pack()
+
+    # Lancer l'interface Tkinter
+    main_layout.mainloop()
+
+def publish_start_button():
+    client = mqtt.Client(userdata=client_data.get())
+    client.on_publish = on_publish  # callback associated function
+    client.connect(broker.get(), port.get(), keepalive)
+
+    # === Boucle pour generer des données alèatoires de temperature===
+    while True:
+        temp = round(random.randint(22, 30))
+        temp = str(temp) + "°C"
+        client.publish(topic, temp)
+        print(f"Température publiée sur {topic}:{temp}")
+        time.sleep(4)
+
+
+def main():
+    config_ui_interface()
+
+
+if __name__ == "__main__":
+    main()
+
+
+

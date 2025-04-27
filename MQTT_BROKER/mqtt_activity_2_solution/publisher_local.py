@@ -9,11 +9,10 @@ port = 1883 # port mqtt
 keepalive = 60 # time to live(seconds)
 topic = f"telemetry/temp"# topic
 # client internal data
-client_data="publisher-binome:raoult-pasteur"
+client_data="publisher:binome-raoult-pasteur"
 
 def on_publish(client, userdata, mid):
-    client_id=client._client_id.decode()
-    print(f"on_publish with userdata:{str(userdata)} and id:{client_id} et message id:{mid}")
+    print(f"on_publish with userdata:{str(userdata)} and message id:{mid}")
 
 def main():
     client = mqtt.Client(userdata=client_data)
