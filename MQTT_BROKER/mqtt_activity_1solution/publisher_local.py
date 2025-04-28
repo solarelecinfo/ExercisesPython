@@ -19,7 +19,7 @@ def main():
     client.on_publish = on_publish  # callback associated function
     client.connect(broker, port, keepalive)
 
-    # === Boucle pour generer des données alèatoires de temperature===
+    #Boucle pour générer des données aléatoires de temperature===
     while True:
         temp = round(random.randint(22, 30))
         temp =str(temp)+"°C"
