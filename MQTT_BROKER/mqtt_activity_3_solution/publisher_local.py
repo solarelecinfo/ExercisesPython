@@ -13,11 +13,11 @@ main_layout.geometry("650x500")  # taille en pixel de l'écran
 log_box = None
 
 # Paramètres de connection au Broker(serveur MQTT)
-broker = tk.StringVar()  # tkinder input variable "localhost"
-port = tk.IntVar()  # tkinder input variable port mqtt
+broker = tk.StringVar(value = "127.0.0.1")  # tkinder input variable "localhost"
+port = tk.IntVar(value = 1883)  # tkinder input variable port mqtt
 keepalive = 60  # time to live(seconds)
 topic = f"telemetry/temp"  # topic
-client_data = tk.StringVar()  # "publisher:binome-raoult-pasteur"
+client_data = tk.StringVar(value="publisher:nom1-nom2")
 
 def log_message(msg):
     # Utiliser after() pour mettre à jour l'interface depuis le thread principal
@@ -33,7 +33,6 @@ def submit_server_values():
 
     # lance un serveur
     threading.Thread(target=publish_start_button, daemon=True).start()
-
 
 def on_publish(client, userdata, mid):
     log_message(f"on_publish with userdata:{str(userdata)} and message id:{mid}")
@@ -66,7 +65,7 @@ def config_ui_interface():
 
     # Zone de text pour logs
     global log_box #reference variable global
-    log_box = scrolledtext.ScrolledText(main_layout, width=60, height=20)
+    log_box = scrolledtext.ScrolledText(main_layout, width=65, height=20)
     log_box.pack()
 
     # Lancer l'interface Tkinter
