@@ -10,7 +10,8 @@
     <h2>Bonjour au ClientWeb subcriber MQTT </h2>
     <p>Les messages des télémetries sont affichés en temps réel ci-dessous:</p>
     <div id="logs"></div>
-<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<!-- <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script> -->
+<script src="./js/mqtt.min.js"></script> 
 <script>
   const logDiv = document.getElementById('logs');
 
@@ -19,7 +20,7 @@
     logDiv.innerHTML += msg + '<br>';
   }
 
-  const client = mqtt.connect('ws://192.168.137.244:9001');
+  const client = mqtt.connect('ws://localhost:9001');
 
   client.on('connect', function () {
     log('Connecté au broker !');

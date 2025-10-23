@@ -29,13 +29,13 @@ def main():
             with open(fichier, "r", encoding="utf-8-sig") as f:
                 etat = f.readline().strip()
         except FileNotFoundError:
-            etat = "UNKNOWN"
+            etat = "ERROR"
         if etat not in ["ON", "OFF"]:
-
+            etat = "UNKNOWN"
             print(f"⚠️ Valeur inattendue dans {fichier}: '{etat}' (attendu: ON ou OFF)")
-        else:
-            client.publish(topic, etat)
-            print(f"État publié sur {topic}: {etat}")
+        
+        client.publish(topic, etat)
+        print(f"État publié sur {topic}: {etat}")
         time.sleep(5)
 
 if __name__ == "__main__":
