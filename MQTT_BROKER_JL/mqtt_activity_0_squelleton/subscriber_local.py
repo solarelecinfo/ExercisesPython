@@ -1,0 +1,23 @@
+import paho.mqtt.client as mqtt
+
+# Paramètres de connection au Broker(serveur MQTT)
+broker = "broker" # hostname
+port = 0# port mqtt
+keepalive = 60 # keep alive time(seconds)
+topic = f"topic"# topic
+# client internal data
+client_data="subscriber:binome-raoult-pasteur"
+
+def on_message(client, userdata, msg):
+    payload=msg.payload.decode()
+    print(f"on_message with userdata:{str(userdata)} and payload:{payload}")
+
+def main():
+    client = mqtt.Client(userdata=client_data)
+    client.on_message = on_message #callback associated function
+    client.connect(broker, port, keepalive)
+    client.subscribe(topic)
+    client.loop_forever()
+
+if __name__ == "__main__":
+    main()
