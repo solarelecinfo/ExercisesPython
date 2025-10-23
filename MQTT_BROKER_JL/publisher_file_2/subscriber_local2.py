@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 
 # Paramètres de connection au Broker(serveur MQTT)
-broker = "192.168.137.1" # hostname
+broker = "localhost" # hostname
 port = 1883 # port mqtt
 keepalive = 60 # keep alive time(seconds)
 topic = "telemetry/etat"# topic
