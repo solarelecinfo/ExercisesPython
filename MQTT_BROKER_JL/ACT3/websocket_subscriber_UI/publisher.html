@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Publisher MQTT</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, button { margin: 5px 0; padding: 5px; width: 200px; }
+        #logs { border: 1px solid #ccc; padding: 10px; height: 150px; overflow-y: auto; background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h2>Client Web Publisher MQTT</h2>
+
+    <label for="host">Host :</label>
+    <input type="text" id="host" value="localhost"><br>
+
+    <label for="port">Port :</label>
+    <input type="number" id="port" value="9001"><br>
+
+    <label for="topic">Topic :</label>
+    <input type="text" id="topic" value="telemetry/topic"><br>
+
+    <label for="message">Message :</label>
+    <input type="text" id="message" placeholder="Tapez votre message"><br>
+
+    <button id="connectBtn">Connecter</button>
+    <button id="sendBtn" disabled>Envoyer le message</button>
+
+    <h3>Logs :</h3>
+    <div id="logs"></div>
+
+    <script src="./js/mqtt.min.js"></script>
+    <script>
+        const logDiv = document.getElementById('logs');
+        const sendBtn = document.getElementById('sendBtn');
+        let client = null;
+
+        function log(msg) {
+            console.log(msg);
+            logDiv.innerHTML += msg + '<br>';
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        document.getElementById('connectBtn').addEventListener('click', function() {
+            const host = document.getElementById('host').value;
+            const port = document.getElementById('port').value;
+            const wsUrl = `ws://${host}:${port}`;
+
+            if(client) {
+                client.end();
+                log('Déconnecté de l’ancien broker.');
+            }
+
+            client = mqtt.connect(wsUrl);
+
+            client.on('connect', function() {
+                log(`Connecté au broker ${wsUrl}`);
+                sendBtn.disabled = false;
+            });
+
+            client.on('error', function(err) {
+                log('Erreur MQTT : ' + err);
+            });
+        });
+
+        sendBtn.addEventListener('click', function() {
+            const topic = document.getElementById('topic').value;
+            const message = document.getElementById('message').value;
+
+            if(client && client.connected) {
+                client.publish(topic, message);
+                log(`Message publié sur ${topic} : ${message}`);
+                document.getElementById('message').value = '';
+            } else {
+                log('Le client n’est pas connecté.');
+            }
+        });
+    </script>
+</body>
+</html>
