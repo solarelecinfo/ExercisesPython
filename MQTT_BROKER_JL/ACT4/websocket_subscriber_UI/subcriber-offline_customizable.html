@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Subscriber MQTT</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        input, button { margin: 5px 0; padding: 5px; }
+        #logs { border: 1px solid #ccc; padding: 10px; height: 200px; overflow-y: auto; background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h2>Client Web Subscriber MQTT</h2>
+    <p>Configurez le broker et le topic :</p>
+
+    <label for="host">Host :</label>
+    <input type="text" id="host" value="localhost"><br>
+
+    <label for="port">Port :</label>
+    <input type="number" id="port" value="9001"><br>
+
+    <label for="topic">Topic :</label>
+    <input type="text" id="topic" value="telemetry/topic"><br>
+
+    <button id="connectBtn">Connecter</button>
+
+    <h3>Messages reçus :</h3>
+    <div id="logs"></div>
+
+    <script src="./js/mqtt.min.js"></script>
+    <script>
+        const logDiv = document.getElementById('logs');
+        let client = null;
+
+        function log(msg) {
+            console.log(msg);
+            logDiv.innerHTML += msg + '<br>';
+            logDiv.scrollTop = logDiv.scrollHeight; // auto scroll
+        }
+
+        document.getElementById('connectBtn').addEventListener('click', function() {
+            const host = document.getElementById('host').value;
+            const port = document.getElementById('port').value;
+            const topic = document.getElementById('topic').value;
+
+            if(client) {
+                client.end(); // déconnecte l'ancien client
+                log('Déconnecté de l’ancien broker.');
+            }
+
+            const wsUrl = `ws://${host}:${port}`;
+            client = mqtt.connect(wsUrl);
+
+            client.on('connect', function() {
+                log(`Connecté au broker ${wsUrl}`);
+                client.subscribe(topic, function(err) {
+                    if(err) {
+                        log(`Erreur lors de l'abonnement au topic ${topic}`);
+                    } else {
+                        log(`Abonné au topic : ${topic}`);
+                    }
+                });
+            });
+
+            client.on('message', function(topic, message) {
+                log(`${topic} : ${message.toString()}`);
+            });
+
+            client.on('error', function(err) {
+                log('Erreur MQTT : ' + err);
+            });
+        });
+    </script>
+</body>
+</html>
