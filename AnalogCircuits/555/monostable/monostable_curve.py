@@ -27,7 +27,7 @@ cursor = Cursor(ax, useblit=True, color='blue', linewidth=1)
 ax.plot(R_values, t_values, 'r', label='t(R) = 1.1 R C')
 ax.set_xlabel('Résistance R (Ohms)')
 ax.set_ylabel('Durée tw (secondes)')
-ax.set_title('Durée du pulse tw en fonction de R avec C constant =100e-6')
+ax.set_title('Durée du pulse tw en fonction de R avec C constant= 270e-6')
 ax.legend()
 ax.grid(True)
 
